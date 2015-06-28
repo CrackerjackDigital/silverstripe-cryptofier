@@ -3,6 +3,8 @@ Two-way Cryptography Module for SilverStripe
 
 __AS WITH ALL THINGS SECURITY RELATED PLEASE READ THIS DOCUMENTATION AND THINK CAREFULLY BEFORE INSTALLING AND USING__
 
+__THIS CODE IS NOT YET PRODUCTION READY BUT SHOULD BE IN NEXT FEW DAYS__
+
 This module provides common developer interface and user friendly output to cryptography modules at the moment:
 
 -   defuse (https://github.com/defuse/php-encryption)
@@ -98,16 +100,16 @@ Encrypting and decrypting using an access key:
 
 		$service = Injector::inst()->get('CryptofierService');
 
-		// this will be a url, keyboaard, human readable (hex) 'friendly' key maybe entered on
-		// a form in reality after being sent to a user by email
-
-		$accessKey = $service->generate_key();
-
 		$encrypted = $service
 			->encrypt(
 				"But I have promises to keep",
 				$accessKey
 			);
+
+		// the access key will be a url, keyboaard, human readable (hex) 'friendly' key maybe entered on
+		// a form in reality after being sent to a user by email
+
+		$accessKey = $service->generate_key();
 
 		$decrypted = $service
 			->decrypt(
