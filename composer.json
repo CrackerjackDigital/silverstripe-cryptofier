@@ -1,0 +1,27 @@
+{
+    "name": "moveforward/silverstripe-cryptofier",
+    "type": "silverstripe-module",
+    "description": "Two-way Cryptography Module for SilverStripe",
+    "homepage": "http://www.crackerjack.net.nz/",
+    "license": "BSD-3-Clause",
+    "keywords": ["silverstripe", "cryptography", "encrypt", "decrypt"],
+    "authors": [
+        {
+            "name": "Steve Wake",
+            "homepage": "https://github.com/wakes"
+        },
+        {
+            "name": "CrackerJack Digital",
+            "homepage": "http://www.crackerjack.net.nz/"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.2",
+        "composer/installers": "*",
+        "silverstripe/framework": "3.1.*"
+    },
+    "extra": {
+        "installer-name": "cryptofier"
+    },
+    "minimum-stability": "dev"
+}

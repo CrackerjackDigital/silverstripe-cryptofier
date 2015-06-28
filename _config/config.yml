@@ -1,0 +1,13 @@
+---
+Name: cryptofier-module-config
+Only:
+  constantdefined: 'CryptofierPHPVersion53'
+---
+Injector:
+  CryptofierService: CryptofierZendImplementation
+---
+Except:
+  constantdefined: 'CryptofierPHPVersion53'
+---
+Injector:
+  CryptofierService: CryptofierDefuseImplementation
