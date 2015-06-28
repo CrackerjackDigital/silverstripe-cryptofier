@@ -18,7 +18,9 @@
     "require": {
         "php": ">=5.3.2",
         "composer/installers": "*",
-        "silverstripe/framework": "3.1.*"
+        "silverstripe/framework": "3.1.*",
+	    "defuse/php-encryption":        ">=1.2.1",
+	    "zendframework/zend-crypt":     "2.5.1"
     },
     "extra": {
         "installer-name": "cryptofier"
