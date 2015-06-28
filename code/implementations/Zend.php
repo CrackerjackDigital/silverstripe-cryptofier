@@ -3,13 +3,13 @@ use Zend\Crypt\BlockCipher as BlockCipher;
 use Zend\Crypt\Key\Derivation\Scrypt as KeyGen;
 use Zend\Math\Rand;
 
-class CryptofierZendImplementation extends CryptofierImplementation {
+final class CryptofierZendImplementation extends CryptofierImplementation {
 
     // server key used by encrypt, decrypt methods to always encrypt with this on first pass
     // should be in 'friendly' format
     private static $server_key = '';
 
-    // what we use to split fields in the token, should be very unlikely to be in a field value.
+    // what we use to join/split fields in the token, should be very unlikely to be in a field value.
     private static $token_delimiter = self::TokenDelimiter;
 
     /**
@@ -54,13 +54,15 @@ class CryptofierZendImplementation extends CryptofierImplementation {
     /**
      * @see CryptofierCryptoInterface
      *
+     * NB: Shouldn't be called externally/by derived classes as doesn't use the server key!
+     *
      * @param $value
      * @param $friendlyKey
      *
      * @return string - maybe unfriendly
      * @throws CryptofierException
      */
-    public function encrypt_native($value, $friendlyKey) {
+    final protected function encrypt_native($value, $friendlyKey) {
         try {
             $cipher = BlockCipher::factory('mcrypt', array('algo' => 'aes'));
             $cipher->setKey(
@@ -76,13 +78,15 @@ class CryptofierZendImplementation extends CryptofierImplementation {
     /**
      * @see CryptofierCryptoInterface
      *
+     * NB: Shouldn't be called externally/by derived classes as doesn't use the server key!
+     *
      * @param $value
      * @param $friendlyKey
      *
      * @return string - maybe unfriendly
      * @throws CryptofierException
      */
-    public function decrypt_native($value, $friendlyKey) {
+    final protected function decrypt_native($value, $friendlyKey) {
         try {
             $cipher = BlockCipher::factory('mcrypt', array('algo' => 'aes'));
             $cipher->setKey(

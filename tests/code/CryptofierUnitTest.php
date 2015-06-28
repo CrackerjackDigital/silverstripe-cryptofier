@@ -37,6 +37,16 @@ PLAINTEXT;
         parent::setUpOnce();
         $this->loadConfig();
     }
+
+    public function setUp() {
+        parent::setUp();
+        Injector::nest();
+    }
+
+    public function tearDown() {
+        Injector::unnest();
+        parent::tearDown();
+    }
     /**
      * Set class configurations according to $replace parameter and passed $config:
      *  if $replace is false then
@@ -85,7 +95,7 @@ PLAINTEXT;
         Config::inst()->update($className, $serverKeyConfigName, $instance->generate_key());
 
         // we don't want a singleton in this instance as we'll be switching classes regularly
-        return Injector::inst()->get($serviceName, false);
+        return Injector::inst()->get($serviceName);
     }
 
 
@@ -96,8 +106,6 @@ PLAINTEXT;
     public function testNativeFunctions() {
         // test for each service registered
         foreach ($this->listImplementations() as $className) {
-            Injector::nest();
-
             $crypto = $this->configuredService($className);
 
             $key = $crypto->generate_key();
@@ -108,7 +116,6 @@ PLAINTEXT;
 
             $this()->assertEquals($decrypted, $this->plainText, "That decrypted value equals plain text using implementation '$className'");
 
-            Injector::unnest();
         }
     }
 
@@ -118,7 +125,6 @@ PLAINTEXT;
     public function testBasicFunctionsOnePass() {
         // test for each service registered
         foreach ($this->listImplementations() as $className) {
-
             $crypto = $this->configuredService($className);
 
             $encrypted = $crypto->encrypt($this->plainText);
@@ -134,7 +140,6 @@ PLAINTEXT;
     public function testBasicFunctionsTwoPass() {
         // test for each service registered
         foreach ($this->listImplementations() as $className) {
-
             $crypto = $this->configuredService($className);
 
             $accessKey = $crypto->generate_key();
@@ -154,7 +159,6 @@ PLAINTEXT;
         list($itemID, $startDate, $endDate) = array_values($this->token);
 
         foreach ($this->listImplementations() as $className) {
-
             $crypto = $this->configuredService($className);
 
             $encrypted = $crypto->encrypt_token(array(
@@ -178,7 +182,6 @@ PLAINTEXT;
         list($itemID, $startDate, $endDate) = array_values($this->token);
 
         foreach ($this->listImplementations() as $className) {
-
             $crypto = $this->configuredService($className);
 
             $accessKey = $crypto->generate_key();
