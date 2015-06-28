@@ -53,6 +53,7 @@ abstract class CryptofierImplementation extends Object
         if (empty($serverKey)) {
             throw new CryptofierException("No server key (not going to do anything without it)");
         }
+        return $serverKey;
     }
 
 

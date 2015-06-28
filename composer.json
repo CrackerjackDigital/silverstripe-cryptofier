@@ -1,5 +1,5 @@
 {
-    "name": "moveforward/silverstripe-cryptofier",
+    "name": "crackerjackdigital/silverstripe-cryptofier",
     "type": "silverstripe-module",
     "description": "Two-way Cryptography Module for SilverStripe",
     "homepage": "http://www.crackerjack.net.nz/",
