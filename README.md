@@ -98,7 +98,11 @@ Encrypting and decrypting a value using the server key only:
 
 Encrypting and decrypting using an access key:
 
+-   Initially be the administrator:
+
 		$service = Injector::inst()->get('CryptofierService');
+
+		$accessKey = $service->generate_key();
 
 		$encrypted = $service
 			->encrypt(
@@ -106,16 +110,26 @@ Encrypting and decrypting using an access key:
 				$accessKey
 			);
 
-		// the access key will be a url, keyboaard, human readable (hex) 'friendly' key maybe entered on
-		// a form in reality after being sent to a user by email
+		// save encrypted data somewhere
 
-		$accessKey = $service->generate_key();
+		echo "Access Key: $accessKey";
+
+		// now access key could be provided to users who can then retype into a form
+
+-   Later by the user entering access key in a form:
+
+		$accessKey = Controller::curr()->getRequest()->postVar('AccessKey');
+
+		// load encrypted data from somewhere
 
 		$decrypted = $service
 			->decrypt(
 				$encrypted,
 				$accessKey
 			);
+
+		// use decrypted data
+
 
 Encrypting/decrypting some more structured info for use as e.g. a url segment
 

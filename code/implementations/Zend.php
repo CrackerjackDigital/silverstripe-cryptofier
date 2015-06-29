@@ -31,6 +31,8 @@ final class CryptofierZendImplementation extends CryptofierImplementation {
     /**
      * Use bin2hex to make 'friendly' value for urls, cut-and-paste, typeable etc
      *
+     * NB: The value is not encrypted in any way, just made more friendly!
+     *
      * @param $unfriendlyValue
      *
      * @return string - 'friendly' value
