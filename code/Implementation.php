@@ -63,7 +63,7 @@ abstract class CryptofierImplementation extends Object
      * @param $plainTextValue
      * @param $friendlyKeySecondPass - 'friendly' version of self.generate_key output
      *
-     * @return string - maybe unfriendly
+     * @return string - most probably 'unfriendly'
      * @throws CryptofierException
      * @api
      */
@@ -88,7 +88,7 @@ abstract class CryptofierImplementation extends Object
      * @param $encryptedValue
      * @param $friendlyKeySecondPass - 'friendly' version of self.generate_key output
      *
-     * @return string - maybe unfriendly
+     * @return string - maybe unfriendly, won't be unfriendlied
      * @throws CryptofierException
      * @api
      */
@@ -104,6 +104,17 @@ abstract class CryptofierImplementation extends Object
             $encryptedValue,
             $this->server_key()
         );
+    }
+
+    /**
+     * Decrypt a cipherText which we know to be 'friendly' when passed.
+     *
+     * @param      $friendlyEncryptedValue
+     * @param null $friendlyKeySecondPass
+     * @return string
+     */
+    public function decrypt_friendly($friendlyEncryptedValue, $friendlyKeySecondPass = null) {
+        return $this->decrypt($this->unfriendly($friendlyEncryptedValue), $friendlyKeySecondPass);
     }
 
     /**
