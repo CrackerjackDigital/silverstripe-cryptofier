@@ -145,7 +145,7 @@ Encrypting/decrypting some more structured info for use as e.g. a url segment
 
 		// output link or send by email etc
 
-Some time later in the page controller class:
+	Some time later in the page controller class:
 
 		// allowed actions, url handlers etc e.g.
 		private static $url_handlers = array(
@@ -153,23 +153,34 @@ Some time later in the page controller class:
 		);
 
 		public function index() {
-			// code that enforces a login to see the page (or protect it with the CMS page security options)
+			// code that enforces a login to see the page content (or set via CMS security options on page)
 		}
 
 		public function token(SS_HttpRequest $request) {
-			$encrypted = $request->param('Token');
+			$accessToken = $request->postVar('AccessToken');
 
-			try {
-				list($id, $title, $startDate, $endDate) = $service->decrypt_token($encrypted);
+			if (!$accessToken && !Member::currentUserID()) {
+				// show a form to get the access token, the form should post back to current url via 'setFormAction'
+			} else {
 
-				// do something with data and output something
+				$encrypted = $request->param('Token');
 
-			} catch (CryptofierException $e) {
-				// handle cryptofier exception without compromising info
+				try {
+					list($id, $title, $startDate, $endDate) = $service->decrypt_token($encrypted, $accessToken);
 
-				$this->httpError(401, 'No way buddy');
-			} catch (Exception $e) {
-				$this->httpError(500, 'Fail');
+					// do something with data, maybe output something, set session info etc
+					// maybe redirect to same page without 'token' action
+
+				} catch (CryptofierException $e) {
+					// handle cryptofier exception without compromising info
+
+					$this->httpError(401, 'No way buddy');
+
+				} catch (Exception $e) {
+
+					$this->httpError(500, 'Fail');
+
+				}
 			}
 
 		}
