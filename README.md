@@ -1,9 +1,7 @@
-Two-way Cryptography Module for SilverStripe
---------------------------------------------
+Two-way Cryptography Wrapper Module for SilverStripe
+----------------------------------------------------
 
 __AS WITH ALL THINGS SECURITY RELATED PLEASE READ THIS DOCUMENTATION AND THINK CAREFULLY BEFORE INSTALLING AND USING__
-
-__THIS CODE IS NOT YET PRODUCTION READY BUT SHOULD BE IN NEXT FEW DAYS__
 
 This module provides common developer interface and user friendly output to cryptography modules at the moment:
 
@@ -13,8 +11,8 @@ This module provides common developer interface and user friendly output to cryp
 The implementation is chosen by default to be _defuse_ if php >= 5.4 or _Zend_ if php 5.3 (lesser versions are beneath
 requirements for SilverStripe 3.1 anyway).
 
-Please contact me https://github.com/CrackerjackDigital/silverstripe-cryptofier if you have any questions and/or see any
-problems or enhancements with the module.
+Please contact me via github if you have any questions and/or see any problems with or enhancements/pull requests
+for the module.
 
 (Apologies for shouting up there...)
 
@@ -75,7 +73,6 @@ __Double check you have set the server keys for all implementations immediately 
 To set the server keys copy the 'cryptofier.yml' file from the module 'install/' directory to your application
 _config folder and update the two entries 'server_key' to valid server keys you can generate via calls to the
 respective implementations generate_key method. Then run /dev/build?flush=1 to update config.
-
 
 Usage
 =====
@@ -142,16 +139,59 @@ Encrypting/decrypting some more structured info for use as e.g. a url segment
 			'EndDate' => '2015-10-20'
 		));
 
-		list($id, $title, $startDate, $endDate) = $service->decrypt_token($encrypted);
+		$somePage = <get a page which can handle the 'link' action and do something with it).
 
-Of course we can use two-pass with token as per above by passing an access key as second argument.
+		$link = Controller::join_links($somePage->Link('token'), $encrypted);
 
-Setting the Implementation to use (override default choice by PHP_VERSION):
+		// output link or send by email etc
+
+Some time later in the page controller class:
+
+		// allowed actions, url handlers etc e.g.
+		private static $url_handlers = array(
+			'token/$Token!' => 'token'
+		);
+
+		public function index() {
+			// code that enforces a login to see the page (or protect it with the CMS page security options)
+		}
+
+		public function token(SS_HttpRequest $request) {
+			$encrypted = $request->param('Token');
+
+			try {
+				list($id, $title, $startDate, $endDate) = $service->decrypt_token($encrypted);
+
+				// do something with data and output something
+
+			} catch (CryptofierException $e) {
+				// handle cryptofier exception without compromising info
+
+				$this->httpError(401, 'No way buddy');
+			} catch (Exception $e) {
+				$this->httpError(500, 'Fail');
+			}
+
+		}
+
+Of course we can use two-pass with an access token as per above by passing an access key as second argument. In this
+case you would need to show a Form initially where the access key could be entered and then use the entered key from
+POST data to decrypt the token on the url.
+
+Setting the Implementation to use (override default choice by PHP_VERSION)
+==========================================================================
 
 Say we want to use Zend always then in application config.yml:
 
 	Injector:
 		CryptofierService: CryptofierZendImplementation
+
+Generating Keys
+===============
+
+Keys (e.g. for use as server keys) can be generated from the command line root of your server:
+
+		framework/sake CryptofierGenerateKeys.php
 
 Tests
 =====
@@ -194,15 +234,18 @@ Installation
 	as always be carefull with commas, brackets etc as easy to bork your composer and get mystifying error messages.
 
 
-2.  Copy cryptofier/install/cryptofier.yml to your app config folder and update:
+2.  Read this README again.
 
-	__set your server keys for all implementations by calling generate_key on each implementation__
+3.	Copy cryptofier/install/cryptofier.yml to your app config folder and update:
 
-3.  dev/build?flush=1
+	__set your server keys for all implementations by calling generate_key on each implementation or by generating
+	keys using framework/sake CryptofierGenerateKeys__
 
-4.  Checkout the docs! [@docs/html/index.html]
+4.  dev/build?flush=1
 
-5.  Try it out using examples above as basis
+5.  Checkout the docs! [@docs/html/index.html]
+
+6.  Try it out using examples above as basis
 
 
 Disclaimer
